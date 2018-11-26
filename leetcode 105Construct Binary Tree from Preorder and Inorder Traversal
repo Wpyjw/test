@@ -1,0 +1,38 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+/*
+树的问题，优先考虑递归
+先序序列第一个结点为root，查找root在中序序列中的位置，以root为分界，左侧为左子树，右侧为右子树
+*/
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        //将两个序列的首尾放进去，就相当于把两个序列放进去
+        return helper(0,0,inorder.length-1,preorder,inorder);
+    }
+    public TreeNode helper(int preStart,int inStart,int inEnd,int[] preorder,int[] inorder){
+        //极限条件，超界返回null
+         if (preStart > preorder.length - 1 || inStart > inEnd) {
+        return null;
+    }
+        //建立结点来保存当前的先序遍历结点
+        TreeNode root=new TreeNode(preorder[preStart]);
+        int inIndex=0;//中序序列中当前结点的索引
+        //遍历中序序列，找到当前根结点在中序序列中的位置（因为没有相同的元素，所以可以使用这种方法来搜寻）
+        for(int i=inStart;i<=inEnd;i++){
+            if(inorder[i]==root.val){
+                inIndex=i;
+            }
+        }
+        //中序序列中左边的结点为左子树，右边的结点为右子树
+        root.left=helper(preStart+1,inStart,inIndex-1,preorder,inorder);//提取左子树
+        root.right=helper(preStart+inIndex-inStart+1,inIndex+1,inEnd,preorder,inorder);//提取右子树
+        return root;
+    }
+}
