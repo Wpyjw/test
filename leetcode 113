@@ -1,0 +1,32 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+/*
+    二叉树的路径求和问题，可以先构造存储List的result，以及存储当前结果的curRes，通过递归的方式在函数里带着两个结果变量计算，就可以
+    保存路径的数，每当在列表中添加一个数，在结束的时候要去掉这个数再返回到上一层，保证这层结束curRes列表可以返回到上一层的状态。
+*/
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> result=new ArrayList<List<Integer>>();
+        List<Integer> curRes=new ArrayList<Integer>();
+        pathSum(root,sum,result,curRes);
+        return result;
+    }
+    public void pathSum(TreeNode root, int sum,List<List<Integer>> result,List<Integer> curRes) {
+        if(root==null) return;
+        curRes.add(new Integer(root.val));//有添加
+        if(root.left==null&&root.right==null&&sum-root.val==0){//找到path
+            result.add(new ArrayList(curRes));
+        }else{
+            pathSum(root.left,sum-root.val,result,curRes);
+            pathSum(root.right,sum-root.val,result,curRes);
+        }
+        curRes.remove(curRes.size()-1);//要有返回
+    }
+}
